@@ -266,3 +266,53 @@ function groupLog(label, fn) {
     return result;
 }
 
+// ======== FUNÇÕES PARA TRAVAR/DESATRAVAR CAMPOS =========
+function travarCampo(id) {
+  const campo = document.getElementById(id);
+  if (!campo) return;
+  campo.setAttribute('readonly', true);
+  campo.setAttribute('disabled', true);
+  campo.style.cursor = 'not-allowed';
+  campo.style.opacity = '0.6';
+}
+
+function destravarCampo(id) {
+  const campo = document.getElementById(id);
+  if (!campo) return;
+  campo.removeAttribute('readonly');
+  campo.removeAttribute('disabled');
+  campo.style.cursor = '';
+  campo.style.opacity = '1';
+}
+
+// ======== PERSISTÊNCIA MESMO APÓS ALTERAÇÕES DO DOM =========
+const camposTravados = { cep: false, bairro: false, cidade: false };
+
+function aplicarTravas() {
+  for (let id in camposTravados) {
+    if (camposTravados[id]) {
+      travarCampo(id);
+    } else {
+      destravarCampo(id);
+    }
+  }
+}
+
+// Observa mudanças no DOM e reaplica travas automaticamente
+const observer = new MutationObserver(() => {
+  aplicarTravas();
+});
+observer.observe(document.body, { childList: true, subtree: true });
+
+// ======== FUNÇÕES PÚBLICAS =========
+function setTrava(campoId, travar) {
+  camposTravados[campoId] = travar;
+  aplicarTravas();
+}
+
+// Expor globalmente
+window.travarCampo = travarCampo;
+window.destravarCampo = destravarCampo;
+window.aplicarTravas = aplicarTravas;
+window.setTrava = setTrava;
+
