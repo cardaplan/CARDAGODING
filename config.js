@@ -286,7 +286,7 @@ function destravarCampo(id) {
 }
 
 // ======== PERSISTÊNCIA MESMO APÓS ALTERAÇÕES DO DOM =========
-const camposTravados = { cep: false, bairro: false, cidade: false };
+const camposTravados = { cep: true, bairro: false, cidade: true };
 
 function aplicarTravas() {
   for (let id in camposTravados) {
